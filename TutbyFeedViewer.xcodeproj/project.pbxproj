@@ -10,7 +10,6 @@
 		034918D1254823C7003FFCA3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034918D0254823C7003FFCA3 /* AppDelegate.swift */; };
 		034918DA254823CB003FFCA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 034918D9254823CB003FFCA3 /* Assets.xcassets */; };
 		034918DD254823CB003FFCA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 034918DB254823CB003FFCA3 /* LaunchScreen.storyboard */; };
-		034918EA25482669003FFCA3 /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034918E925482669003FFCA3 /* NewsTableViewController.swift */; };
 		034918EF254826BA003FFCA3 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034918EE254826BA003FFCA3 /* NetworkService.swift */; };
 		034918F3254826CA003FFCA3 /* XMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034918F2254826CA003FFCA3 /* XMLParser.swift */; };
 		034918FD25482793003FFCA3 /* NewsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 034918FB25482793003FFCA3 /* NewsModel.xcdatamodeld */; };
@@ -27,7 +26,6 @@
 		034918D9254823CB003FFCA3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		034918DC254823CB003FFCA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		034918DE254823CB003FFCA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		034918E925482669003FFCA3 /* NewsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewController.swift; sourceTree = "<group>"; };
 		034918EE254826BA003FFCA3 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		034918F2254826CA003FFCA3 /* XMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLParser.swift; sourceTree = "<group>"; };
 		034918FC25482793003FFCA3 /* NewsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NewsModel.xcdatamodel; sourceTree = "<group>"; };
@@ -69,7 +67,6 @@
 			isa = PBXGroup;
 			children = (
 				03491916254966B2003FFCA3 /* VeiwControllers */,
-				034918F525482718003FFCA3 /* Models */,
 				034918ED254826A6003FFCA3 /* Networking */,
 				034918D0254823C7003FFCA3 /* AppDelegate.swift */,
 				034918D9254823CB003FFCA3 /* Assets.xcassets */,
@@ -83,6 +80,7 @@
 		034918ED254826A6003FFCA3 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				034918F525482718003FFCA3 /* Models */,
 				034918EE254826BA003FFCA3 /* NetworkService.swift */,
 				034918F2254826CA003FFCA3 /* XMLParser.swift */,
 			);
@@ -103,7 +101,6 @@
 			isa = PBXGroup;
 			children = (
 				0349191C25497968003FFCA3 /* Views */,
-				034918E925482669003FFCA3 /* NewsTableViewController.swift */,
 				0349191925497962003FFCA3 /* NewsCollectionViewController.swift */,
 			);
 			path = VeiwControllers;
@@ -188,7 +185,6 @@
 			files = (
 				034919142548D675003FFCA3 /* News+CoreDataProperties.swift in Sources */,
 				034918F3254826CA003FFCA3 /* XMLParser.swift in Sources */,
-				034918EA25482669003FFCA3 /* NewsTableViewController.swift in Sources */,
 				0349190625482A72003FFCA3 /* News+CoreDataClass.swift in Sources */,
 				034918FD25482793003FFCA3 /* NewsModel.xcdatamodeld in Sources */,
 				0349190E25485F43003FFCA3 /* NewsManager.swift in Sources */,

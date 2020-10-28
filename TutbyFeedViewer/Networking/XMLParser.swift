@@ -34,6 +34,11 @@ class NewsFeedParser: NSObject {
             currentPubdate = currentPubdate.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         }
     }
+    private var currentImageLink: String {
+        didSet {
+            currentImageLink = currentImageLink.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        }
+    }
     
     private var parser: XMLParser!
     
@@ -47,6 +52,7 @@ class NewsFeedParser: NSObject {
         currentDescription = ""
         currentPubdate = ""
         currentElement = ""
+        currentImageLink = ""
         super.init()
     }
     
@@ -83,7 +89,7 @@ extension NewsFeedParser: XMLParserDelegate {
             currentPubdate = ""
         }
         if currentElement == "media:content" {
-            
+            currentImageLink = attributeDict["url"] ?? ""
         }
     }
     
@@ -113,6 +119,7 @@ extension NewsFeedParser: XMLParserDelegate {
             currentNews.link = currentLink
             currentNews.newsDescription = deleteHtmlFrom(string: currentDescription)
             currentNews.pubdate = pubdate
+            currentNews.imageLink = currentImageLink
             news.append(currentNews)
         }
     }

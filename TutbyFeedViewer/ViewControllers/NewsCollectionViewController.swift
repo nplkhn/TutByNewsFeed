@@ -20,6 +20,7 @@ class NewsCollectionViewController: UICollectionViewController {
             }
         }
     }
+    private let newsManager = NewsManager.sharedManager
     
     private var segmentControl: UISegmentedControl!
 
@@ -33,7 +34,6 @@ class NewsCollectionViewController: UICollectionViewController {
         
         getFeed()
         
-
         // Do any additional setup after loading the view.
     }
     
@@ -97,15 +97,28 @@ class NewsCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! NewsCollectionViewCell
     
-//        cell.backgroundColor = .lightGray
-        cell.setImage(image: UIImage(named: "TestImage")!)
+        cell.setImage(image: UIImage(systemName: "photo")!.withRenderingMode(.alwaysOriginal))
         cell.setTitle(title: news[indexPath.row].title!)
-        print(news[indexPath.row].newsDescription!)
         cell.setDescription(description: news[indexPath.row].newsDescription!)
         
-        // Configure the cell
+        guard let imageLink = news[indexPath.row].imageLink else { return cell }
         
-    
+        if let image = newsManager.getImage(for: imageLink) {
+            cell.setImage(image: image)
+        } else {
+            networkService.requestImage(from: news[indexPath.row].imageLink!) { (data, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                guard let data = data, let image = UIImage(data: data) else  { return }
+                self.newsManager.cacheImageData(data, for: imageLink)
+                DispatchQueue.main.async {
+                    cell.setImage(image: image)
+                }
+            }
+        }
+        
         return cell
     }
 
@@ -122,21 +135,6 @@ class NewsCollectionViewController: UICollectionViewController {
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
     }
     */
 
