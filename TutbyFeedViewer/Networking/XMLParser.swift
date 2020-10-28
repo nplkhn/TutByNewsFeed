@@ -57,6 +57,18 @@ class NewsFeedParser: NSObject {
         parser.parse()
     }
     
+    func deleteHtmlFrom(string: String) -> String {
+        do {
+            let regex:NSRegularExpression  = try NSRegularExpression(  pattern: "<.*?>", options: NSRegularExpression.Options.caseInsensitive)
+            let range = NSMakeRange(0, string.count)
+            let htmlLessString:String = regex.stringByReplacingMatches(in: string, options: NSRegularExpression.MatchingOptions(), range:range , withTemplate: "")
+            return htmlLessString
+        } catch {
+            print(error.localizedDescription)
+        }
+        return string
+    }
+    
 }
 
 extension NewsFeedParser: XMLParserDelegate {
@@ -99,7 +111,7 @@ extension NewsFeedParser: XMLParserDelegate {
             let currentNews = News(entity: newsManager.entity, insertInto: nil)
             currentNews.title = currentTitle
             currentNews.link = currentLink
-            currentNews.newsDescription = currentDescription
+            currentNews.newsDescription = deleteHtmlFrom(string: currentDescription)
             currentNews.pubdate = pubdate
             news.append(currentNews)
         }

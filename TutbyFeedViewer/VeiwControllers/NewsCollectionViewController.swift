@@ -100,6 +100,7 @@ class NewsCollectionViewController: UICollectionViewController {
 //        cell.backgroundColor = .lightGray
         cell.setImage(image: UIImage(named: "TestImage")!)
         cell.setTitle(title: news[indexPath.row].title!)
+        print(news[indexPath.row].newsDescription!)
         cell.setDescription(description: news[indexPath.row].newsDescription!)
         
         // Configure the cell
