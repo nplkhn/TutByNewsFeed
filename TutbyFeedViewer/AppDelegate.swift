@@ -17,7 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        window?.rootViewController = NewsTableViewController()
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        collectionViewLayout.scrollDirection = .horizontal
+        
+        let contentVC = NewsCollectionViewController(collectionViewLayout: collectionViewLayout)
+        let navVC = UINavigationController(rootViewController: contentVC)
+        window?.rootViewController = navVC
         
         window?.makeKeyAndVisible()
         return true

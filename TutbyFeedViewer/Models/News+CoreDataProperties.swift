@@ -2,7 +2,7 @@
 //  News+CoreDataProperties.swift
 //  TutbyFeedViewer
 //
-//  Created by Никита Плахин on 10/27/20.
+//  Created by Никита Плахин on 10/28/20.
 //
 //
 
@@ -20,7 +20,7 @@ extension News {
     @NSManaged public var link: String?
     @NSManaged public var newsDescription: String?
     @NSManaged public var pubdate: Date?
-    
+    @NSManaged public var imageLink: String?
 
 }
 

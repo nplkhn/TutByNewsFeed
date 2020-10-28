@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="News" representedClassName="News" syncable="YES">
+        <attribute name="imageLink" optional="YES" attributeType="String"/>
         <attribute name="link" optional="YES" attributeType="String"/>
         <attribute name="newsDescription" optional="YES" attributeType="String"/>
         <attribute name="pubdate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="News" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="News" positionX="-54" positionY="-9" width="128" height="118"/>
     </elements>
 </model>

@@ -70,6 +70,9 @@ extension NewsFeedParser: XMLParserDelegate {
             currentDescription = ""
             currentPubdate = ""
         }
+        if currentElement == "media:content" {
+            
+        }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {

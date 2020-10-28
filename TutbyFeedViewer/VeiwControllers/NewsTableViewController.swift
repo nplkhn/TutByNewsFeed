@@ -18,12 +18,17 @@ class NewsTableViewController: UITableViewController {
             }
         }
     }
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.backgroundColor = UIColor(named: "TBBackground")
+        tableView.separatorColor = .lightGray
+        
         networkService.request(url: "https://news.tut.by/rss/index.rss") { (news, error) in
             if let error = error {
                 print(error.localizedDescription)
@@ -55,14 +60,34 @@ class NewsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         
         cell.textLabel?.text = news[indexPath.row].title
+        cell.textLabel?.numberOfLines = .max
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        cell.textLabel?.textColor = .white
+        cell.backgroundColor = UIColor(named: "TBBackground")
+//        cell.textLabel?.numberOfLines = cell.textLabel?.calculateMaxLines()
+        cell.detailTextLabel?.text = news[indexPath.row].newsDescription
+        cell.detailTextLabel?.sizeToFit()
         
-
+//        networkService.requestImage(from: news[indexPath.row].imageLink) { data, error in
+//            if let error = error {
+//                print(error.localizedDescription)
+//                return
+//            }
+//        }
+        
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -109,4 +134,23 @@ class NewsTableViewController: UITableViewController {
     }
     */
 
+}
+
+extension UILabel {
+    func calculateMaxLines() -> Int {
+        let maxSize = CGSize(width: frame.size.width, height: CGFloat(Float.infinity))
+        let charSize = font.lineHeight
+        let text = (self.text ?? "") as NSString
+        let textSize = text.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font!], context: nil)
+        let linesRoundedUp = Int(ceil(textSize.height/charSize))
+        return linesRoundedUp
+    }
+    
+    var maxNumberOfLines: Int {
+        let maxSize = CGSize(width: frame.size.width, height: CGFloat(MAXFLOAT))
+        let text = (self.text ?? "") as NSString
+        let textHeight = text.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil).height
+        let lineHeight = font.lineHeight
+        return Int(ceil(textHeight / lineHeight))
+    }
 }
