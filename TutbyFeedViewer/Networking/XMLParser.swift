@@ -56,7 +56,7 @@ class NewsFeedParser: NSObject {
         super.init()
     }
     
-    func parseFeed(data: Data, completion: (([News]) -> Void)?) {
+    func parse(data: Data, completion: (([News]) -> Void)?) {
         self.completion = completion
         parser = XMLParser(data: data)
         parser.delegate = self

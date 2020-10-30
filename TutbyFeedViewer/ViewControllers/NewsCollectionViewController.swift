@@ -11,20 +11,38 @@ import UIKit
 
 class NewsCollectionViewController: UICollectionViewController {
     private let reuseIdentifier = "NewsCollectionViewCell"
-    
-    private let networkService = NetworkService()
     private var news: [News] = [] {
         didSet {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
+            news.forEach { news in
+                networkService.requestNews(from: news.link!) { text, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        return
+                    }
+                    
+                    guard let text = text else  { return }
+                    news.newsText = text
+                }
+            }
         }
     }
+    
+    // custom transition
+//    var selectedCell: NewsCollectionViewCell?
+//    var selectedCellContentViewSnapshot: UIView?
+//    var animator: Animator?
+    
+    // services
+    private let networkService = NetworkService.shared
     private let newsManager = NewsManager.sharedManager
     
+    // ui
     private var segmentControl: UISegmentedControl!
-
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,6 +57,7 @@ class NewsCollectionViewController: UICollectionViewController {
     
     private func setupView() {
         self.clearsSelectionOnViewWillAppear = false
+        collectionView.showsHorizontalScrollIndicator = false
         
         collectionView.backgroundColor = UIColor(named: "TBBackground")
         navigationController?.navigationBar.barTintColor = UIColor(named: "TBBackground")
@@ -58,7 +77,7 @@ class NewsCollectionViewController: UICollectionViewController {
     }
     
     private func getFeed() {
-        networkService.request(url: "https://news.tut.by/rss/index.rss") { (news, error) in
+        networkService.requestFeed { (news, error) in
             if let error = error {
                 print(error.localizedDescription)
                 return
@@ -68,36 +87,37 @@ class NewsCollectionViewController: UICollectionViewController {
             }
         }
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using [segue destinationViewController].
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
     // MARK: UICollectionViewDataSource
-
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-
+    
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         return news.count
     }
     
     
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! NewsCollectionViewCell
-    
-        cell.setImage(image: UIImage(systemName: "photo")!.withRenderingMode(.alwaysOriginal))
+        cell.setActivityViewCenter(to: cell.contentView.center)
+        
+        //        cell.setImage(image: UIImage(systemName: "photo")!.withRenderingMode(.alwaysOriginal))
         cell.setTitle(title: news[indexPath.row].title!)
         cell.setDescription(description: news[indexPath.row].newsDescription!)
         
@@ -121,23 +141,76 @@ class NewsCollectionViewController: UICollectionViewController {
         
         return cell
     }
-
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let centerX = self.collectionView.center.x
+        
+        for cell in self.collectionView.visibleCells where cell is NewsCollectionViewCell {
+            let basePosition = cell.convert(CGPoint.zero, to: self.view)
+            
+            let cellCenterX = basePosition.x + self.collectionView.frame.size.width / 2.0
+            
+            
+            let distance = abs(cellCenterX - centerX)
+            
+            let tolerance: CGFloat = 0.02
+            var scale = 1.0 + tolerance - ((distance / centerX) * 0.105)
+            if scale > 1 {
+                scale = 1
+            }
+            
+            if(scale < 0.75){
+                scale = 0.75
+            }
+            
+            //            (cell as! NewsCollectionViewCell).setTransformToImage(transform: CGAffineTransform(scaleX: scale, y: scale))
+            cell.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+    }
+    
     // MARK: UICollectionViewDelegate
-
+    
     /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+     // Uncomment this method to specify if the specified item should be highlighted during tracking
+     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+     return true
+     }
+     */
+    
+    
+    //    // Uncomment this method to specify if the specified item should be selected
+    //    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    //        let newsVC = NewsViewController()
+    //        newsVC.transitioningDelegate = self
+    //        newsVC.setup(with: news[indexPath.row])
+    ////        transition(from: self, to: newsVC, duration: 1, options: .curveEaseInOut) {
+    ////            <#code#>
+    ////        } completion: { (<#Bool#>) in
+    ////            <#code#>
+    ////        }
+    //
+    ////        present(newsVC, animated: true) {
+    ////            collectionView.deselectItem(at: indexPath, animated: false)
+    //        }
+    //
+    //        return true
+    //    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        selectedCell = collectionView.cellForItem(at: indexPath) as? NewsCollectionViewCell
+//        selectedCellContentViewSnapshot = selectedCell?.contentView.snapshotView(afterScreenUpdates: false)
+        
+        let newsVC = NewsViewController()
+        newsVC.setup(with: news[indexPath.row])
+        
+        
+//        present(newsVC, animated: true) {
+//            self.collectionView.deselectItem(at: indexPath, animated: false)
+//        }
+        
+        show(newsVC, sender: nil)
+        
     }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
 }
 
 extension NewsCollectionViewController: UICollectionViewDelegateFlowLayout {
@@ -149,3 +222,25 @@ extension NewsCollectionViewController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 0)
     }
 }
+
+// Custom transition
+//
+//extension NewsCollectionViewController: UIViewControllerTransitioningDelegate {
+//
+//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        guard let firstVC = presented as? NewsCollectionViewController,
+//              let secondVC = presenting as? NewsViewController,
+//              let selectedCellContentViewSnapshot = selectedCellContentViewSnapshot else { return nil }
+//
+//        animator = Animator(type: .present, firstVC: firstVC, secondVC: secondVC, selectedCellContentViewSnapshot: selectedCellContentViewSnapshot)
+//
+//        return animator
+//    }
+//
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        guard let secondVC = dismissed as? NewsViewController,
+//              let selectedCellContentViewSnapshot = selectedCellContentViewSnapshot else { return nil }
+//        animator = Animator(type: .dismiss, firstVC: self, secondVC: secondVC, selectedCellContentViewSnapshot: selectedCellContentViewSnapshot)
+//        return animator
+//    }
+//}

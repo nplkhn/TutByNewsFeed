@@ -38,33 +38,41 @@ class NewsCollectionViewCell: UICollectionViewCell {
     private let descriptionLabel: UILabel = {
         let descriptionLable = UILabel()
         descriptionLable.numberOfLines = .max
-//        descriptionLable.font = UIFont.system
         descriptionLable.textColor = UIColor(named: "TBLightGray")
-        descriptionLable.textAlignment = .justified
+        descriptionLable.textAlignment = .center
         return descriptionLable
+    }()
+    private let activityView: UIActivityIndicatorView = {
+        let activityView = UIActivityIndicatorView(style: .medium)
+        activityView.color = .white
+        activityView.hidesWhenStopped = true
+        return activityView
     }()
     
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
+        imageView.addSubview(activityView)
+        activityView.startAnimating()
+        
         contentStack.addArrangedSubview(imageView)
         contentStack.addArrangedSubview(titleLabel)
         contentStack.addArrangedSubview(descriptionLabel)
         contentView.addSubview(contentStack)
-//        contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-//            // image view
+            // image view
             NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: contentView, attribute: .height, multiplier: 0.4, constant: 0),
             
             // content stack view
             NSLayoutConstraint(item: contentStack, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: contentStack, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: contentStack, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1, constant: 0),
-
             
         ])
+        
+        activityView.center = imageView.center
     }
     
     required init?(coder: NSCoder) {
@@ -73,6 +81,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
     
     func setImage(image: UIImage) {
         imageView.image = image
+        activityView.stopAnimating()
     }
     
     func setTitle(title: String) {
@@ -85,4 +94,11 @@ class NewsCollectionViewCell: UICollectionViewCell {
         descriptionLabel.sizeToFit()
     }
     
+    func setActivityViewCenter(to center: CGPoint) {
+        activityView.center = center
+    }
+    
+    func setTransformToImage(transform: CGAffineTransform) {
+        imageView.transform = transform
+    }
 }

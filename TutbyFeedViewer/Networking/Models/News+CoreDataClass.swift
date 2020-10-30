@@ -11,5 +11,8 @@ import CoreData
 
 @objc(News)
 public class News: NSManagedObject {
+    
+    var isSaved: Bool?
+    var newsText: String?
 
 }

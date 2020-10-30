@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,10 @@
 		034919142548D675003FFCA3 /* News+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034919132548D675003FFCA3 /* News+CoreDataProperties.swift */; };
 		0349191A25497962003FFCA3 /* NewsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0349191925497962003FFCA3 /* NewsCollectionViewController.swift */; };
 		0349191E2549797F003FFCA3 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0349191D2549797F003FFCA3 /* NewsCollectionViewCell.swift */; };
+		0349192A254ABB81003FFCA3 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03491929254ABB81003FFCA3 /* NewsViewController.swift */; };
+		0349192E254B1A91003FFCA3 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0349192D254B1A91003FFCA3 /* Animator.swift */; };
+		034E62B7254C773B00BB3DBE /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034E62B6254C773B00BB3DBE /* HTMLParser.swift */; };
+		F447E6849465BE6C53B445F1 /* Pods_TutbyFeedViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7967D1092751299EE6132E /* Pods_TutbyFeedViewer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,12 @@
 		034919132548D675003FFCA3 /* News+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "News+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0349191925497962003FFCA3 /* NewsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewController.swift; sourceTree = "<group>"; };
 		0349191D2549797F003FFCA3 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
+		03491929254ABB81003FFCA3 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
+		0349192D254B1A91003FFCA3 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
+		034E62B6254C773B00BB3DBE /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		B34A5499E2EC8EF05B92F6AE /* Pods-TutbyFeedViewer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutbyFeedViewer.release.xcconfig"; path = "Target Support Files/Pods-TutbyFeedViewer/Pods-TutbyFeedViewer.release.xcconfig"; sourceTree = "<group>"; };
+		C20E1F3793AE84F93C67C4BF /* Pods-TutbyFeedViewer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TutbyFeedViewer.debug.xcconfig"; path = "Target Support Files/Pods-TutbyFeedViewer/Pods-TutbyFeedViewer.debug.xcconfig"; sourceTree = "<group>"; };
+		EF7967D1092751299EE6132E /* Pods_TutbyFeedViewer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TutbyFeedViewer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F447E6849465BE6C53B445F1 /* Pods_TutbyFeedViewer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +63,8 @@
 			children = (
 				034918CF254823C7003FFCA3 /* TutbyFeedViewer */,
 				034918CE254823C7003FFCA3 /* Products */,
+				3AA3BD69ECC0A742FB6404FF /* Pods */,
+				56E45461D0DB842101D15431 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,13 +79,13 @@
 		034918CF254823C7003FFCA3 /* TutbyFeedViewer */ = {
 			isa = PBXGroup;
 			children = (
-				03491916254966B2003FFCA3 /* VeiwControllers */,
-				034918ED254826A6003FFCA3 /* Networking */,
 				034918D0254823C7003FFCA3 /* AppDelegate.swift */,
 				034918D9254823CB003FFCA3 /* Assets.xcassets */,
-				034918DB254823CB003FFCA3 /* LaunchScreen.storyboard */,
 				034918DE254823CB003FFCA3 /* Info.plist */,
-				0349190D25485F43003FFCA3 /* NewsManager.swift */,
+				034918DB254823CB003FFCA3 /* LaunchScreen.storyboard */,
+				03491927254A2872003FFCA3 /* Managers */,
+				034918ED254826A6003FFCA3 /* Networking */,
+				03491916254966B2003FFCA3 /* ViewControllers */,
 			);
 			path = TutbyFeedViewer;
 			sourceTree = "<group>";
@@ -83,6 +96,7 @@
 				034918F525482718003FFCA3 /* Models */,
 				034918EE254826BA003FFCA3 /* NetworkService.swift */,
 				034918F2254826CA003FFCA3 /* XMLParser.swift */,
+				034E62B6254C773B00BB3DBE /* HTMLParser.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -97,13 +111,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		03491916254966B2003FFCA3 /* VeiwControllers */ = {
+		03491916254966B2003FFCA3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				034E62B1254C760A00BB3DBE /* Animator */,
 				0349191C25497968003FFCA3 /* Views */,
 				0349191925497962003FFCA3 /* NewsCollectionViewController.swift */,
+				03491929254ABB81003FFCA3 /* NewsViewController.swift */,
 			);
-			path = VeiwControllers;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		0349191C25497968003FFCA3 /* Views */ = {
@@ -114,6 +130,39 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		03491927254A2872003FFCA3 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				0349190D25485F43003FFCA3 /* NewsManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		034E62B1254C760A00BB3DBE /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				0349192D254B1A91003FFCA3 /* Animator.swift */,
+			);
+			path = Animator;
+			sourceTree = "<group>";
+		};
+		3AA3BD69ECC0A742FB6404FF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C20E1F3793AE84F93C67C4BF /* Pods-TutbyFeedViewer.debug.xcconfig */,
+				B34A5499E2EC8EF05B92F6AE /* Pods-TutbyFeedViewer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		56E45461D0DB842101D15431 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF7967D1092751299EE6132E /* Pods_TutbyFeedViewer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -121,9 +170,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 034918E1254823CB003FFCA3 /* Build configuration list for PBXNativeTarget "TutbyFeedViewer" */;
 			buildPhases = (
+				FFE16B1651D66D4716A09F91 /* [CP] Check Pods Manifest.lock */,
 				034918C9254823C7003FFCA3 /* Sources */,
 				034918CA254823C7003FFCA3 /* Frameworks */,
 				034918CB254823C7003FFCA3 /* Resources */,
+				FCADEC10DBDE94D6C42DA6E1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -178,11 +229,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		FCADEC10DBDE94D6C42DA6E1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TutbyFeedViewer/Pods-TutbyFeedViewer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TutbyFeedViewer/Pods-TutbyFeedViewer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TutbyFeedViewer/Pods-TutbyFeedViewer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFE16B1651D66D4716A09F91 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TutbyFeedViewer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		034918C9254823C7003FFCA3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0349192A254ABB81003FFCA3 /* NewsViewController.swift in Sources */,
 				034919142548D675003FFCA3 /* News+CoreDataProperties.swift in Sources */,
 				034918F3254826CA003FFCA3 /* XMLParser.swift in Sources */,
 				0349190625482A72003FFCA3 /* News+CoreDataClass.swift in Sources */,
@@ -191,6 +285,8 @@
 				0349191A25497962003FFCA3 /* NewsCollectionViewController.swift in Sources */,
 				034918EF254826BA003FFCA3 /* NetworkService.swift in Sources */,
 				034918D1254823C7003FFCA3 /* AppDelegate.swift in Sources */,
+				034E62B7254C773B00BB3DBE /* HTMLParser.swift in Sources */,
+				0349192E254B1A91003FFCA3 /* Animator.swift in Sources */,
 				0349191E2549797F003FFCA3 /* NewsCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +423,7 @@
 		};
 		034918E2254823CB003FFCA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C20E1F3793AE84F93C67C4BF /* Pods-TutbyFeedViewer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -346,6 +443,7 @@
 		};
 		034918E3254823CB003FFCA3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B34A5499E2EC8EF05B92F6AE /* Pods-TutbyFeedViewer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
