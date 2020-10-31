@@ -14,5 +14,9 @@ public class News: NSManagedObject {
     
     var isSaved: Bool?
     var newsText: String?
+    
+    static func ==(lhs: News, rhs: News) -> Bool {
+        return lhs.title == rhs.title
+    }
 
 }

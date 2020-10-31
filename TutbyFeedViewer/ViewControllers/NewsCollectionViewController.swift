@@ -8,7 +8,6 @@
 import UIKit
 
 
-
 class NewsCollectionViewController: UICollectionViewController {
     private let reuseIdentifier = "NewsCollectionViewCell"
     private var news: [News] = [] {
@@ -17,6 +16,13 @@ class NewsCollectionViewController: UICollectionViewController {
                 self.collectionView.reloadData()
             }
             getNewsText()
+            newsManager.findFavourites(in: news)
+        }
+    }
+    
+    private var saved: [News] {
+        return news.filter { news -> Bool in
+            return news.isSaved ?? false
         }
     }
     
@@ -30,7 +36,24 @@ class NewsCollectionViewController: UICollectionViewController {
     private let newsManager = NewsManager.sharedManager
     
     // ui
-    private var segmentControl: UISegmentedControl!
+    private var segmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl(items: ["All News","Saved"])
+        
+        segmentControl.tintColor = .clear
+        segmentControl.backgroundColor = .clear
+        segmentControl.selectedSegmentTintColor = .clear
+        
+        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.lightGray], for: .selected)
+        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
+        segmentControl.selectedSegmentIndex = 0
+        
+        return segmentControl
+    }()
+    private var isShowSaved = false {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -52,18 +75,9 @@ class NewsCollectionViewController: UICollectionViewController {
         collectionView.backgroundColor = UIColor(named: "TBBackground")
         navigationController?.navigationBar.barTintColor = UIColor(named: "TBBackground")
         
-        segmentControl = UISegmentedControl(items: ["All News","Saved"])
-        
-        segmentControl.tintColor = .clear
-        segmentControl.backgroundColor = .clear
-        segmentControl.selectedSegmentTintColor = .clear
-        
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.lightGray], for: .selected)
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
-        segmentControl.selectedSegmentIndex = 0
-        
-        
         navigationItem.titleView = segmentControl
+        
+        segmentControl.addTarget(self, action: #selector(self.segmentControlTapped(segmentControl:)), for: .valueChanged)
     }
     
     private func getFeed() {
@@ -93,15 +107,14 @@ class NewsCollectionViewController: UICollectionViewController {
         }
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
+    
+    @objc private func segmentControlTapped(segmentControl: UISegmentedControl) {
+        if segmentControl.selectedSegmentIndex == 0 {
+            isShowSaved = false
+        } else {
+            isShowSaved = true
+        }
+    }
     
     // MARK: UICollectionViewDataSource
     
@@ -113,6 +126,9 @@ class NewsCollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
+        if isShowSaved {
+            return saved.count
+        }
         return news.count
     }
     
@@ -178,32 +194,6 @@ class NewsCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         networkService.cancellTask(for: news[indexPath.row].imageLink ?? "")
     }
-    
-    /*
-     // Uncomment this method to specify if the specified item should be highlighted during tracking
-     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-     return true
-     }
-     */
-    
-    
-    //    // Uncomment this method to specify if the specified item should be selected
-    //    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-    //        let newsVC = NewsViewController()
-    //        newsVC.transitioningDelegate = self
-    //        newsVC.setup(with: news[indexPath.row])
-    ////        transition(from: self, to: newsVC, duration: 1, options: .curveEaseInOut) {
-    ////            <#code#>
-    ////        } completion: { (<#Bool#>) in
-    ////            <#code#>
-    ////        }
-    //
-    ////        present(newsVC, animated: true) {
-    ////            collectionView.deselectItem(at: indexPath, animated: false)
-    //        }
-    //
-    //        return true
-    //    }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        selectedCell = collectionView.cellForItem(at: indexPath) as? NewsCollectionViewCell

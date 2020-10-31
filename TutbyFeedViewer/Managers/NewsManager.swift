@@ -31,4 +31,34 @@ class NewsManager {
         }
         return nil
     }
+    
+    func findFavourites(in news: [News]) {
+        news.forEach { news in
+            if self.context.insertedObjects.contains(news) {
+                news.isSaved = true
+            }
+        }
+    }
+    
+    private func saveChanges() {
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func addToSaved(_ news: News) {
+        context.insert(news)
+        saveChanges()
+    }
+    
+    func removeFromSaved(_ news: News) {
+        if context.insertedObjects.contains(news) {
+            context.delete(news)
+        }
+        saveChanges()
+    }
 }

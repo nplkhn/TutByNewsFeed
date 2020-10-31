@@ -15,14 +15,13 @@ class HTMLParser {
         let document: Document? = try? SwiftSoup.parse(htmlString)
         
         guard let doc = document,
-              let textElements = try? doc.select("div#article_body>p"),
-              let text = try? textElements.text() else { return }
-        var text1 = ""
+              let textElements = try? doc.select("div#article_body>p") else { return }
+        var text = ""
         textElements.forEach { element in
-            text1 += try! element.text()
-            text1 += "\n"
+            text += try! element.text()
+            text += "\n\n"
         }
-        completion?(text1)
+        completion?(text)
         
         
 //        completion?("check html parser")

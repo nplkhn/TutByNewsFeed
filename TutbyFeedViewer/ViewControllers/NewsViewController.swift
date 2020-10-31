@@ -16,6 +16,7 @@ class NewsViewController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     private let titleLabel: UILabel = {
@@ -29,7 +30,7 @@ class NewsViewController: UIViewController {
     private let contentStack: UIStackView = {
         let contentStack = UIStackView()
         contentStack.axis = .vertical
-        contentStack.alignment = .fill
+        contentStack.alignment = .center
         contentStack.translatesAutoresizingMaskIntoConstraints = false
         contentStack.spacing = 20
         contentStack.distribution = .fill
@@ -39,13 +40,11 @@ class NewsViewController: UIViewController {
         let descriptionLable = UILabel()
         descriptionLable.numberOfLines = .max
         descriptionLable.textColor = UIColor(named: "TBLightGray")
-        descriptionLable.textAlignment = .justified
+        descriptionLable.textAlignment = .natural
         return descriptionLable
     }()
     private let saveButton: UIButton = {
         let button = UIButton()
-        
-//        button.setImage(UIImage(systemName: "bookmark"), for: .normal)
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         button.contentMode = .scaleAspectFit
@@ -53,12 +52,10 @@ class NewsViewController: UIViewController {
     }()
     private let shareButton: UIButton = {
         let button = UIButton()
-        
         button.setImage(UIImage(systemName: "square.and.arrow.up")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         button.contentMode = .scaleAspectFit
-        
         return button
     }()
     private var buttonStack: UIStackView = {
@@ -71,21 +68,47 @@ class NewsViewController: UIViewController {
     }()
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-//        scrollView.
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
     
-    
+    private var news: News? {
+        didSet {
+            if let imageLink = news?.imageLink {
+                if let image = newsManager.getImage(for: imageLink) {
+                    imageView.image = image
+                } else {
+                    networkService.requestImage(from: imageLink) { data, error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                            return
+                        }
+                        guard let imageData = data, let image = UIImage(data: imageData) else { return }
+                        DispatchQueue.main.async {
+                            self.imageView.image = image
+                        }
+                    }
+                }
+            }
+            if let title = news?.title {
+                titleLabel.text = title
+            }
+            if let text = news?.newsText {
+                newsTextLabel.text = text
+            }
+            if let isSaved = news?.isSaved, isSaved {
+                saveButton.setImage(UIImage(systemName: "bookmark.fill")?.withTintColor(.yellow, renderingMode: .alwaysOriginal), for: .normal)
+            } else {
+                saveButton.setImage(UIImage(systemName: "bookmark")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+            }
+        }
+    }
     
     private var newsManager = NewsManager.sharedManager
     private var networkService = NetworkService.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        saveButton.addTarget(self, action: #selector(self.save), for: .touchUpInside)
-        shareButton.addTarget(self, action: #selector(self.share), for: .touchUpInside)
         
         setupView()
 
@@ -107,6 +130,9 @@ class NewsViewController: UIViewController {
         view.addSubview(scrollView)
         
         activateConstraints()
+        
+        saveButton.addTarget(self, action: #selector(self.toggleSaving), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(self.share), for: .touchUpInside)
     }
     
     private func activateConstraints() {
@@ -115,6 +141,9 @@ class NewsViewController: UIViewController {
         NSLayoutConstraint.activate([
             // image view
             NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 0.4, constant: 0),
+            
+            // news text label
+            NSLayoutConstraint(item: newsTextLabel, attribute: .width, relatedBy: .equal, toItem: contentStack, attribute: .width, multiplier: 0.96, constant: 0),
             
             // save button
             NSLayoutConstraint(item: saveButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: buttonSide),
@@ -146,38 +175,30 @@ class NewsViewController: UIViewController {
     
 
     func setup(with news: News) {
-        if let imageLink = news.imageLink {
-            if let image = newsManager.getImage(for: imageLink) {
-                imageView.image = image
-            } else {
-                networkService.requestImage(from: imageLink) { data, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    }
-                    guard let imageData = data, let image = UIImage(data: imageData) else { return }
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }
-            }
-        }
-        if let title = news.title {
-            titleLabel.text = title
-        }
-        if let text = news.newsText {
-            newsTextLabel.text = text
-        }
-        if let isSaved = news.isSaved {
-            isSaved ? saveButton.setImage(UIImage(systemName: "bookmark.fill")?.withTintColor(.yellow), for: .normal) : saveButton.setImage(UIImage(systemName: "bookmark")?.withTintColor(UIColor(named: "TBLightGray")!), for: .normal)
-        }
+        self.news = news
     }
     
-    @objc private func save() {
-        
+    private func save(news: News) {
+        print(#function)
+        newsManager.addToSaved(news)
+    }
+    
+    private func removeSaved(news: News) {
+        print(#function)
+        newsManager.removeFromSaved(news)
+    }
+    
+    @objc func toggleSaving() {
+        guard let news = news else { return }
+        if let isSaved = news.isSaved, isSaved {
+            removeSaved(news: news)
+        } else {
+            save(news: news)
+        }
     }
     
     @objc private func share() {
+        print(#function)
         let message = """
         asd
         """
@@ -186,14 +207,5 @@ class NewsViewController: UIViewController {
         present(shareVC, animated: true, completion: nil)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
