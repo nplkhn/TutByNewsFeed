@@ -16,17 +16,7 @@ class NewsCollectionViewController: UICollectionViewController {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
-            news.forEach { news in
-                networkService.requestNews(from: news.link!) { text, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    }
-                    
-                    guard let text = text else  { return }
-                    news.newsText = text
-                }
-            }
+            getNewsText()
         }
     }
     
@@ -84,6 +74,21 @@ class NewsCollectionViewController: UICollectionViewController {
             }
             if let news = news {
                 self.news = news
+            }
+        }
+    }
+    
+    private func getNewsText() {
+        news.forEach { news in
+            guard let link = news.link else { return }
+            networkService.requestNews(from: link) { text, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                
+                guard let text = text else { return }
+                news.newsText = text
             }
         }
     }
@@ -170,6 +175,10 @@ class NewsCollectionViewController: UICollectionViewController {
     
     // MARK: UICollectionViewDelegate
     
+    override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        networkService.cancellTask(for: news[indexPath.row].imageLink ?? "")
+    }
+    
     /*
      // Uncomment this method to specify if the specified item should be highlighted during tracking
      override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
@@ -204,11 +213,11 @@ class NewsCollectionViewController: UICollectionViewController {
         newsVC.setup(with: news[indexPath.row])
         
         
-//        present(newsVC, animated: true) {
-//            self.collectionView.deselectItem(at: indexPath, animated: false)
-//        }
+        present(newsVC, animated: true) {
+            self.collectionView.deselectItem(at: indexPath, animated: false)
+        }
         
-        show(newsVC, sender: nil)
+//        show(newsVC, sender: nil)
         
     }
 }
