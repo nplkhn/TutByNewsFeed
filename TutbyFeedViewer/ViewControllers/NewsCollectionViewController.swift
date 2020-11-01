@@ -10,21 +10,32 @@ import UIKit
 
 class NewsCollectionViewController: UICollectionViewController {
     private let reuseIdentifier = "NewsCollectionViewCell"
-    private var news: [News] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-            getNewsText()
-            newsManager.findFavourites(in: news)
+//    private var news: [News] {
+//        newsManager.allNews
+////        didSet {
+////            DispatchQueue.main.async {
+////                self.collectionView.reloadData()
+////            }
+////            getNewsText()
+////        }
+//    }
+
+//    private var saved: [News] {
+//        newsManager.savedNews
+////        return news.filter { news -> Bool in
+////            return newsManager.isSaved(news)
+////        }
+//    }
+    
+    private var dataSourse: [News] {
+        if isShowSaved {
+            return newsManager.savedNews
+        } else {
+            return newsManager.allNews
         }
     }
     
-    private var saved: [News] {
-        return news.filter { news -> Bool in
-            return news.isSaved ?? false
-        }
-    }
+    private var selectedNews: News?
     
     // custom transition
 //    var selectedCell: NewsCollectionViewCell?
@@ -32,8 +43,8 @@ class NewsCollectionViewController: UICollectionViewController {
 //    var animator: Animator?
     
     // services
-    private let networkService = NetworkService.shared
-    private let newsManager = NewsManager.sharedManager
+    private var newsManager = NewsManager.sharedManager
+    private var networkService = NetworkService.shared
     
     // ui
     private var segmentControl: UISegmentedControl = {
@@ -87,25 +98,28 @@ class NewsCollectionViewController: UICollectionViewController {
                 return
             }
             if let news = news {
-                self.news = news
+                self.newsManager.allNews = news
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
         }
     }
     
-    private func getNewsText() {
-        news.forEach { news in
-            guard let link = news.link else { return }
-            networkService.requestNews(from: link) { text, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-                
-                guard let text = text else { return }
-                news.newsText = text
-            }
-        }
-    }
+//    private func getNewsText() {
+//        news.forEach { news in
+//            guard let link = news.link else { return }
+//            networkService.requestNews(from: link) { text, error in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                    return
+//                }
+//
+//                guard let text = text else { return }
+//                news.newsText = text
+//            }
+//        }
+//    }
     
     
     @objc private func segmentControlTapped(segmentControl: UISegmentedControl) {
@@ -126,10 +140,7 @@ class NewsCollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        if isShowSaved {
-            return saved.count
-        }
-        return news.count
+        return dataSourse.count
     }
     
     
@@ -139,15 +150,15 @@ class NewsCollectionViewController: UICollectionViewController {
         cell.setActivityViewCenter(to: cell.contentView.center)
         
         //        cell.setImage(image: UIImage(systemName: "photo")!.withRenderingMode(.alwaysOriginal))
-        cell.setTitle(title: news[indexPath.row].title!)
-        cell.setDescription(description: news[indexPath.row].newsDescription!)
+        cell.setTitle(title: dataSourse[indexPath.row].title!)
+        cell.setDescription(description: dataSourse[indexPath.row].newsDescription!)
         
-        guard let imageLink = news[indexPath.row].imageLink else { return cell }
+        guard let imageLink = dataSourse[indexPath.row].imageLink else { return cell }
         
         if let image = newsManager.getImage(for: imageLink) {
             cell.setImage(image: image)
         } else {
-            networkService.requestImage(from: news[indexPath.row].imageLink!) { (data, error) in
+            networkService.requestImage(from: dataSourse[indexPath.row].imageLink!) { (data, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 }
@@ -192,7 +203,7 @@ class NewsCollectionViewController: UICollectionViewController {
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        networkService.cancellTask(for: news[indexPath.row].imageLink ?? "")
+        networkService.cancellTask(for: dataSourse[indexPath.row].imageLink ?? "")
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -200,14 +211,15 @@ class NewsCollectionViewController: UICollectionViewController {
 //        selectedCellContentViewSnapshot = selectedCell?.contentView.snapshotView(afterScreenUpdates: false)
         
         let newsVC = NewsViewController()
-        newsVC.setup(with: news[indexPath.row])
+        selectedNews = dataSourse[indexPath.row]
+        newsVC.setup(with: dataSourse[indexPath.row])
+        
         
         
         present(newsVC, animated: true) {
             self.collectionView.deselectItem(at: indexPath, animated: false)
         }
         
-//        show(newsVC, sender: nil)
         
     }
 }
@@ -221,6 +233,7 @@ extension NewsCollectionViewController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 0)
     }
 }
+
 
 // Custom transition
 //

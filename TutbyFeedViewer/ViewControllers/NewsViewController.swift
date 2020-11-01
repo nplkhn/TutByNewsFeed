@@ -9,6 +9,7 @@ import UIKit
 
 class NewsViewController: UIViewController {
     
+    // UI
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,9 +73,18 @@ class NewsViewController: UIViewController {
         return scrollView
     }()
     
+    // services
+    private let networkService = NetworkService.shared
+    private let newsManager = NewsManager.sharedManager
+    
+    // data
     private var news: News? {
         didSet {
-            if let imageLink = news?.imageLink {
+            guard let news = news else {
+                return
+            }
+            
+            if let imageLink = news.imageLink {
                 if let image = newsManager.getImage(for: imageLink) {
                     imageView.image = image
                 } else {
@@ -90,22 +100,19 @@ class NewsViewController: UIViewController {
                     }
                 }
             }
-            if let title = news?.title {
+            if let title = news.title {
                 titleLabel.text = title
             }
-            if let text = news?.newsText {
+            if let text = news.newsText {
                 newsTextLabel.text = text
             }
-            if let isSaved = news?.isSaved, isSaved {
+            if newsManager.isSaved(news) {
                 saveButton.setImage(UIImage(systemName: "bookmark.fill")?.withTintColor(.yellow, renderingMode: .alwaysOriginal), for: .normal)
             } else {
                 saveButton.setImage(UIImage(systemName: "bookmark")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
             }
         }
     }
-    
-    private var newsManager = NewsManager.sharedManager
-    private var networkService = NetworkService.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -178,23 +185,22 @@ class NewsViewController: UIViewController {
         self.news = news
     }
     
-    private func save(news: News) {
+    private func save() {
         print(#function)
-        newsManager.addToSaved(news)
+//        newsManager.addToSaved(news!)
     }
     
-    private func removeSaved(news: News) {
+    private func removeSaved() {
         print(#function)
-        newsManager.removeFromSaved(news)
+//        newsManager.removeFromSaved(news!)
     }
     
-    @objc func toggleSaving() {
-        guard let news = news else { return }
-        if let isSaved = news.isSaved, isSaved {
-            removeSaved(news: news)
-        } else {
-            save(news: news)
-        }
+    @objc private func toggleSaving() {
+//        if newsManager.isSaved(news!) {
+//            removeSaved()
+//        } else {
+//            save()
+//        }
     }
     
     @objc private func share() {

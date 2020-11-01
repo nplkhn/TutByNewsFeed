@@ -13,7 +13,6 @@ class NetworkService {
     private var htmlParser = HTMLParser()
     private var tasks: [String:[URLSessionDataTask]] = [:]
     
-//    let runningTasks: [String, URLSessionDataTask] = [:]
     
     func requestFeed(completion: @escaping ([News]?, Error?) -> Void) {
         guard let url = URL(string: "https://news.tut.by/rss/index.rss") else { return }
@@ -73,7 +72,6 @@ class NetworkService {
     
     private(set) static var shared: NetworkService = {
         let networkService = NetworkService()
-        
         return networkService
     }()
     
